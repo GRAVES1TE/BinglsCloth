@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Бонусная программа</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #007acc;
+      text-align: center;
+    }
+    .bonus-section {
+      margin-top: 40px;
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 8px;
+      background: #f7f7f7;
+    }
+    .bonus-header {
+      font-size: 24px;
+      font-weight: bold;
+      color: #007acc;
+      text-align: center;
+    }
+    .bonus-info {
+      margin-top: 10px;
+      font-size: 18px;
+      text-align: center;
+    }
+    form {
+      text-align: center;
+    }
+    input[type="email"] {
+      padding: 8px;
+      width: 250px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 10px;
+      background: #007acc;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #005f99;
+    }
+  </style>
+</head>
+<body>
+  <h1>Добро пожаловать!</h1>
+  <p>Этот сайт создан через GitHub Pages.</p>
+  
+  <div class="bonus-section">
+    <div class="bonus-header">Бонусная программа</div>
+    <p style="text-align: center;">Зарегистрируйтесь в бонусной программе и получайте баллы за активность!</p>
+    
+    <!-- Форма регистрации -->
+    <form id="bonusForm">
+      <label for="email">Введите ваш email:</label><br>
+      <input type="email" id="email" name="email" required placeholder="example@mail.com"><br>
+      <button type="submit">Зарегистрироваться</button>
+    </form>
+    
+    <!-- Контент для зарегистрированного пользователя -->
+    <div id="bonusContent" style="display:none;">
+      <p class="bonus-info">Ваш текущий баланс бонусных баллов: <span id="bonusPoints">0</span></p>
+      <div style="text-align: center;">
+        <button id="getBonus">Получить бонус</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // После загрузки страницы
+    document.addEventListener("DOMContentLoaded", function(){
+      const bonusForm = document.getElementById("bonusForm");
+      const bonusContent = document.getElementById("bonusContent");
+      const bonusPointsEl = document.getElementById("bonusPoints");
+      const getBonusBtn = document.getElementById("getBonus");
+      
+      // Функция для обновления отображения баллов
+      function updateBonusDisplay(){
+        let points = localStorage.getItem("bonusPoints");
+        if (!points) {
+          points = 0;
+        }
+        bonusPointsEl.textContent = points;
+      }
+      
+      // Если пользователь уже зарегистрирован
+      if (localStorage.getItem("registeredEmail")) {
+        bonusForm.style.display = "none";
+        bonusContent.style.display = "block";
+        updateBonusDisplay();
+      }
+      
+      // Обработка регистрации
+      bonusForm.addEventListener("submit", function(e){
+        e.preventDefault();
+        const email = document.getElementById("email").value;
+        // Простая регистрация: сохраняем email и выдаём стартовый бонус
+        localStorage.setItem("registeredEmail", email);
+        localStorage.setItem("bonusPoints", 100); // При регистрации начисляется 100 баллов
+        bonusForm.style.display = "none";
+        bonusContent.style.display = "block";
+        updateBonusDisplay();
+        alert("Вы успешно зарегистрированы! Вам начислено 100 бонусных баллов.");
+      });
+      
+      // Обработка получения бонуса
+      getBonusBtn.addEventListener("click", function(){
+        // Получаем текущие баллы
+        let currentPoints = parseInt(localStorage.getItem("bonusPoints"), 10) || 0;
+        // Случайное количество бонусных баллов (от 10 до 59)
+        let bonusEarned = Math.floor(Math.random() * 50) + 10;
+        currentPoints += bonusEarned;
+        localStorage.setItem("bonusPoints", currentPoints);
+        updateBonusDisplay();
+        alert("Вы получили " + bonusEarned + " бонусных баллов!");
+      });
+    });
+  </script>
+</body>
+</html>
